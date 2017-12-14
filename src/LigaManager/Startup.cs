@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using LigaManager.Accounting.Controllers;
+using LigaManager.Accounting.Data;
+using LigaManager.Accounting.Models;
+using LigaManager.Accounting.Services;
+using LigaManager.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using LigaManager.Data;
 using LigaManager.Models;
-using LigaManager.Services;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.FileProviders;
 
 namespace LigaManager
 {
@@ -37,6 +43,19 @@ namespace LigaManager
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc();
+            //Get a reference to the assembly that contains the view components
+            var assembly = typeof(AccountController).GetTypeInfo().Assembly;
+
+            //Create an EmbeddedFileProvider for that assembly
+            var embeddedFileProvider = new EmbeddedFileProvider(
+                assembly
+            );
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                var composite = new CompositeFileProvider(embeddedFileProvider,options.FileProviders[0]);
+                options.FileProviders.Clear();
+                options.FileProviders.Add(composite);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
