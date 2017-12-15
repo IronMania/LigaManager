@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using LigaManager.Accounting.Data;
 using LigaManager.Accounting.Extensions;
 using LigaManager.Accounting.Models;
 using LigaManager.Accounting.Models.ManageViewModels;
@@ -24,6 +25,7 @@ namespace LigaManager.Accounting.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly UrlEncoder _urlEncoder;
+        private readonly ApplicationDbContext _dbContext;
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
@@ -32,13 +34,15 @@ namespace LigaManager.Accounting.Controllers
           SignInManager<ApplicationUser> signInManager,
           IEmailSender emailSender,
           ILogger<ManageController> logger,
-          UrlEncoder urlEncoder)
+          UrlEncoder urlEncoder,
+          ApplicationDbContext dbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
             _urlEncoder = urlEncoder;
+            _dbContext = dbContext;
         }
 
         [TempData]
@@ -63,6 +67,19 @@ namespace LigaManager.Accounting.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> List()
+        {
+            var users = _dbContext.Users.Select(t => new ListViewModel()
+            {
+                Username = t.UserName,
+                Email =  t.Email,
+                PhoneNumber = t.PhoneNumber
+            }).ToList();
+
+            return View(users);
         }
 
         [HttpPost]
