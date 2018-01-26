@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net471</TargetFramework>
+    <AssemblyName>LigaManager.Saison.Domain.Spec</AssemblyName>
+    <RootNamespace>LigaManager.Saison.Domain.Spec</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
+    <PackageReference Include="SpecFlow.NUnit" Version="2.2.1" />
+    <PackageReference Include="SpecFlow.NUnit.Runners" Version="2.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LigaManager.Saison.Domain\LigaManager.Saison.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="FluentAssertions">
+      <HintPath>C:\Users\joerg.weißbecker\.nuget\packages\fluentassertions\4.19.4\lib\netstandard1.3\FluentAssertions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="LigaManagement.feature.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>LigaManagement.feature</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="LigaManagement.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>LigaManagement.feature.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+</Project>
